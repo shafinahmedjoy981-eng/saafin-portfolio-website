@@ -1,0 +1,6 @@
+{
+  "name": "SHAFIN — AI Agent Developer & Portfolio",
+  "description": "A high-end dark mode portfolio for SHAFIN, featuring AI Agent Development, Workflow Automation, interactive project showcases, skills matrix, and instant AI agent simulator.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
