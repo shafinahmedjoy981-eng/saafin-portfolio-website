@@ -303,7 +303,6 @@ export function Projects() {
                         src={activeModalProject.detail.imageSrc}
                         alt={activeModalProject.detail.imageAlt || activeModalProject.title}
                         className="w-full h-full object-cover object-top"
-                        referrerPolicy="no-referrer"
                       />
                     </div>
                   </div>

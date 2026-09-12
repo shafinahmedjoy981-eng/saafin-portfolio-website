@@ -1,6 +1,5 @@
 import { ArrowUpRight, Mail, Linkedin } from 'lucide-react';
 import { motion } from 'motion/react';
-import aboutProfileImg from '../assets/images/about-profile.png';
 import { SHAFIN_PROFILE_IMAGE_URL, SHAFIN_PROFILE_FALLBACK } from '../data/portfolioData';
 
 export function About() {
@@ -37,13 +36,11 @@ export function About() {
               {/* Primary photo container */}
               <div className="relative z-10 rounded-3xl overflow-hidden bg-[#EFEDF6] border-2 border-white shadow-[0_20px_45px_rgba(123,92,250,0.12)] aspect-[4/5] w-full">
                 <img
-                  src={aboutProfileImg}
+                  src="/about-profile.png"
                   alt="Shafin Ahmed"
                   className="w-full h-full object-cover object-top"
-                  referrerPolicy="no-referrer"
-                  crossOrigin="anonymous"
                   onError={(e) => {
-                    (e.currentTarget as HTMLImageElement).src = SHAFIN_PROFILE_IMAGE_URL || SHAFIN_PROFILE_FALLBACK;
+                    (e.currentTarget as HTMLImageElement).src = '/shafin_profile.jpg';
                   }}
                 />
 

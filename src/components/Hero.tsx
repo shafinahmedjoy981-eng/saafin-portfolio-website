@@ -1,7 +1,6 @@
 import { type MouseEvent } from 'react';
 import { ArrowDown, ArrowUpRight, Download } from 'lucide-react';
 import { motion } from 'motion/react';
-import heroBgImage from '../assets/images/hero-bg.png';
 
 export function Hero() {
   const handleScrollTo = (id: string) => {
@@ -60,11 +59,11 @@ Available for freelance contracts, full-stack builds, and enterprise automation.
       {/* Full-bleed background image covering the entire Hero section */}
       <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
         <img
-          src={heroBgImage}
+          src="/hero-bg.png"
           alt="Shafin Ahmed"
           className="w-full h-full object-cover object-[75%_center] sm:object-[70%_center] lg:object-[68%_center]"
           onError={(e) => {
-            (e.currentTarget as HTMLImageElement).src = '/hero-bg.png';
+            (e.currentTarget as HTMLImageElement).src = '/hero_bg.png';
           }}
         />
       </div>

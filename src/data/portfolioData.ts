@@ -1,8 +1,8 @@
 import { Project, Service, Skill, ProcessStep, PricingPlan, Testimonial, FaqItem } from '../types';
 
-export const SHAFIN_PROFILE_IMAGE_URL = 'https://i.postimg.cc/pXtDBRDp/Chat-GPT-Image-Sep-9-2026-01-58-11-PM.png';
-export const SHAFIN_PROFILE_FALLBACK = '/about-profile.png';
-export const HERO_BG_IMAGE_URL = 'https://i.postimg.cc/kgXxRwdZ/Chat-GPT-Image-Sep-9-2026-01-29-54-PM.png';
+export const SHAFIN_PROFILE_IMAGE_URL = '/about-profile.png';
+export const SHAFIN_PROFILE_FALLBACK = '/shafin_profile.jpg';
+export const HERO_BG_IMAGE_URL = '/hero-bg.png';
 export const HERO_BG_FALLBACK = '/hero_bg.png';
 
 export const PROJECTS_DATA: Project[] = [
