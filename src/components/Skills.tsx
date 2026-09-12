@@ -1,106 +1,79 @@
-import React, { useEffect, useState, useRef } from 'react';
-import { SKILLS_LIST } from '../data/portfolioData';
-import { Cpu, Workflow, Terminal, Code2, Database, Sparkles, CheckCircle } from 'lucide-react';
+import { CheckCircle2 } from 'lucide-react';
+import { motion } from 'motion/react';
+import { SKILLS_DATA } from '../data/portfolioData';
 
-export const Skills: React.FC = () => {
-  const [isVisible, setIsVisible] = useState(false);
-  const sectionRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-        }
-      },
-      { threshold: 0.15 }
-    );
-
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current);
-    }
-
-    return () => observer.disconnect();
-  }, []);
-
-  const getIcon = (iconName: string) => {
-    switch (iconName) {
-      case 'Cpu': return <Cpu className="w-5 h-5 text-[#C7FF00]" />;
-      case 'Workflow': return <Workflow className="w-5 h-5 text-[#C7FF00]" />;
-      case 'Terminal': return <Terminal className="w-5 h-5 text-[#C7FF00]" />;
-      case 'Code2': return <Code2 className="w-5 h-5 text-[#C7FF00]" />;
-      case 'Database': return <Database className="w-5 h-5 text-[#C7FF00]" />;
-      case 'Sparkles': return <Sparkles className="w-5 h-5 text-[#C7FF00]" />;
-      default: return <Cpu className="w-5 h-5 text-[#C7FF00]" />;
-    }
-  };
-
+export function Skills() {
   return (
-    <section id="skills" ref={sectionRef} className="py-24 lg:py-36 bg-[#141414] border-t border-white/10 relative">
-      <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-12">
+    <section
+      id="skills"
+      className="py-24 lg:py-32 relative scroll-mt-24 border-t border-[#E3E0EE]/60"
+    >
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-16">
-          <span className="text-xs font-mono uppercase tracking-widest text-[#C7FF00] block mb-3">
-            Technical Proficiency
-          </span>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white font-display mb-4">
-            Mastery & <span className="text-[#C7FF00]">Engineering Matrix</span>.
+        <div className="flex flex-col items-start mb-16">
+          <div className="inline-flex items-center px-3.5 py-1.5 rounded-full bg-[#EFEDF6] border border-[#E3E0EE] text-xs font-bold uppercase tracking-widest text-[#6B6976] mb-4">
+            <span>TECHNICAL PROFICIENCY</span>
+          </div>
+
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-[#15131C]">
+            Mastery & Engineering Matrix
           </h2>
-          <p className="text-base text-[#B5B5B5]">
-            Deep domain expertise across autonomous AI orchestration, workflow engine design, and custom API architecture.
-          </p>
         </div>
 
-        {/* 6 Glass Skill Cards */}
+        {/* 3 columns x 2 rows Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {SKILLS_LIST.map((skill) => (
-            <div
+          {SKILLS_DATA.map((skill, idx) => (
+            <motion.div
               key={skill.id}
-              tabIndex={0}
-              className="card-interactive bg-[#181818]/80 backdrop-blur-xl border border-white/10 rounded-[28px] p-8 flex flex-col justify-between cursor-pointer"
+              initial={{ opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-50px' }}
+              transition={{ duration: 0.5, delay: idx * 0.08 }}
+              whileHover={{
+                y: -8,
+                scale: 1.02,
+                boxShadow: '0 20px 35px -10px rgba(123, 92, 250, 0.22)',
+                transition: { duration: 0.25, ease: 'easeOut' },
+              }}
+              className="p-8 rounded-3xl bg-[#EFEDF6] border border-[#E3E0EE] flex flex-col justify-between transition-all duration-300 ease-out hover:bg-[#7B5CFA] hover:border-[#7B5CFA] cursor-pointer group"
             >
               <div>
-                <div className="flex items-center justify-between mb-6">
-                  <div className="flex items-center gap-3">
-                    <div className="p-3 rounded-2xl bg-black/60 border border-white/10">
-                      {getIcon(skill.iconName)}
-                    </div>
-                    <span className="text-xs font-mono uppercase px-2.5 py-1 rounded-full bg-white/5 text-[#B5B5B5]">
-                      {skill.category}
-                    </span>
-                  </div>
-
-                  {/* Percentage Display */}
-                  <span className="text-3xl font-extrabold text-[#C7FF00] font-display">
+                {/* Header: Skill Name & Percentage Display */}
+                <div className="flex items-start justify-between gap-4 mb-4">
+                  <h3 className="text-lg font-bold text-[#15131C] group-hover:text-white transition-colors">
+                    {skill.name}
+                  </h3>
+                  <span className="text-2xl font-black text-[#7B5CFA] group-hover:text-white tabular-nums transition-colors">
                     {skill.percentage}%
                   </span>
                 </div>
 
-                <h3 className="text-xl font-bold text-white font-display mb-2">
-                  {skill.name}
-                </h3>
-
-                <p className="text-xs text-[#B5B5B5] leading-relaxed mb-6">
-                  {skill.description}
-                </p>
+                {/* Animated Horizontal Progress Bar */}
+                <div className="w-full h-3 rounded-full bg-white border border-[#E3E0EE] group-hover:bg-white/20 group-hover:border-white/30 overflow-hidden p-0.5 mb-6 transition-colors">
+                  <motion.div
+                    initial={{ width: 0 }}
+                    whileInView={{ width: `${skill.percentage}%` }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 1.2, delay: 0.2 + idx * 0.1, ease: 'easeOut' }}
+                    className="h-full rounded-full bg-gradient-to-r from-[#7B5CFA] to-[#6446E0] group-hover:from-white group-hover:to-white/90 transition-all"
+                  />
+                </div>
               </div>
 
-              {/* Animated Progress Bar */}
-              <div className="w-full bg-black/80 h-3 rounded-full overflow-hidden p-0.5 border border-white/5">
-                <div
-                  className="h-full bg-gradient-to-r from-[#C7FF00]/80 to-[#C7FF00] rounded-full transition-all duration-1000 ease-out"
-                  style={{
-                    width: isVisible ? `${skill.percentage}%` : '0%',
-                  }}
-                />
+              {/* Verified badge */}
+              <div className="pt-4 border-t border-[#E3E0EE] group-hover:border-white/20 flex items-center justify-between text-xs font-semibold text-[#6B6976] group-hover:text-white/80 transition-colors">
+                <span className="flex items-center gap-1.5 text-[#15131C] group-hover:text-white transition-colors">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-[#7B5CFA] group-hover:text-white transition-colors" />
+                  <span>Production Ready</span>
+                </span>
+                <span className="group-hover:text-white/80 transition-colors">Level {skill.percentage >= 85 ? 'Senior' : 'Advanced'}</span>
               </div>
-
-            </div>
+            </motion.div>
           ))}
         </div>
 
       </div>
     </section>
   );
-};
+}

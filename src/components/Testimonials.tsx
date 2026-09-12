@@ -1,148 +1,195 @@
-import React, { useState } from 'react';
-import { TESTIMONIALS_LIST, PERSONAL_INFO } from '../data/portfolioData';
-import { Star, Quote, ChevronLeft, ChevronRight, Award, ShieldCheck, Zap } from 'lucide-react';
+import { useState, useRef, useEffect, useCallback, type MouseEvent } from 'react';
+import { Quote, ChevronLeft, ChevronRight } from 'lucide-react';
+import { motion } from 'motion/react';
+import { TESTIMONIALS_DATA } from '../data/portfolioData';
 
-export const Testimonials: React.FC = () => {
-  const [activeIdx, setActiveIdx] = useState(0);
+export function Testimonials() {
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const [startX, setStartX] = useState(0);
+  const [scrollLeftState, setScrollLeftState] = useState(0);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(true);
 
-  const currentTesti = TESTIMONIALS_LIST[activeIdx];
+  const updateScrollButtons = useCallback(() => {
+    if (scrollContainerRef.current) {
+      const { scrollLeft, scrollWidth, clientWidth } = scrollContainerRef.current;
+      setCanScrollLeft(scrollLeft > 15);
+      setCanScrollRight(scrollLeft + clientWidth < scrollWidth - 15);
+    }
+  }, []);
 
-  const handleNext = () => {
-    setActiveIdx((prev) => (prev + 1) % TESTIMONIALS_LIST.length);
+  useEffect(() => {
+    const el = scrollContainerRef.current;
+    if (!el) return;
+    updateScrollButtons();
+    window.addEventListener('resize', updateScrollButtons);
+    return () => window.removeEventListener('resize', updateScrollButtons);
+  }, [updateScrollButtons]);
+
+  const handleMouseDown = (e: MouseEvent) => {
+    if (!scrollContainerRef.current) return;
+    setIsDragging(true);
+    setStartX(e.pageX - scrollContainerRef.current.offsetLeft);
+    setScrollLeftState(scrollContainerRef.current.scrollLeft);
   };
 
-  const handlePrev = () => {
-    setActiveIdx((prev) => (prev - 1 + TESTIMONIALS_LIST.length) % TESTIMONIALS_LIST.length);
+  const handleMouseMove = (e: MouseEvent) => {
+    if (!isDragging || !scrollContainerRef.current) return;
+    e.preventDefault();
+    const x = e.pageX - scrollContainerRef.current.offsetLeft;
+    const walk = (x - startX) * 1.2;
+    scrollContainerRef.current.scrollLeft = scrollLeftState - walk;
+    updateScrollButtons();
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
+    updateScrollButtons();
+  };
+
+  const handleMouseLeave = () => {
+    if (isDragging) {
+      setIsDragging(false);
+      updateScrollButtons();
+    }
+  };
+
+  const handleScroll = (direction: 'left' | 'right') => {
+    if (!scrollContainerRef.current) return;
+    const scrollStep = 408; // ~384px card width + 24px gap
+    scrollContainerRef.current.scrollBy({
+      left: direction === 'left' ? -scrollStep : scrollStep,
+      behavior: 'smooth',
+    });
+    setTimeout(updateScrollButtons, 350);
   };
 
   return (
-    <section className="py-24 lg:py-36 bg-[#0B0B0B] relative overflow-hidden">
-      <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-12">
+    <section
+      id="testimonials"
+      className="py-24 lg:py-32 relative border-t border-[#E3E0EE]/60 overflow-hidden"
+    >
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
-          
-          {/* LEFT: Large Client Quote Card (Span 7) */}
-          <div className="lg:col-span-7">
-            <div className="bg-[#141414] border border-white/10 rounded-[32px] p-8 sm:p-12 relative shadow-2xl">
-              
-              <Quote className="w-12 h-12 text-[#C7FF00]/30 mb-6" />
+        {/* Section Header with Carousel Navigation Controls */}
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-12">
+          <div>
+            <div className="inline-flex items-center px-3.5 py-1.5 rounded-full bg-[#EFEDF6] border border-[#E3E0EE] text-xs font-bold uppercase tracking-widest text-[#6B6976] mb-4">
+              <span>TESTIMONIALS</span>
+            </div>
 
-              {/* Impact Pill Tag */}
-              <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#C7FF00]/10 border border-[#C7FF00]/30 text-xs font-mono font-bold text-[#C7FF00] mb-6">
-                <Zap className="w-3.5 h-3.5" />
-                <span>{currentTesti.impactTag}</span>
-              </div>
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-[#15131C]">
+              What Clients Say
+            </h2>
+          </div>
 
-              {/* Star Rating */}
-              <div className="flex items-center gap-1 mb-6">
-                {[...Array(currentTesti.rating)].map((_, i) => (
-                  <Star key={i} className="w-5 h-5 fill-[#C7FF00] text-[#C7FF00]" />
-                ))}
-              </div>
+          {/* Prev / Next Carousel Controls */}
+          <div className="flex items-center gap-3">
+            <span className="text-xs font-semibold text-[#6B6976] hidden md:inline-block mr-1">
+              Drag or use arrows
+            </span>
+            <button
+              type="button"
+              onClick={() => handleScroll('left')}
+              disabled={!canScrollLeft}
+              aria-label="Previous testimonials"
+              id="testimonials-prev-btn"
+              className={`w-11 h-11 rounded-2xl border flex items-center justify-center transition-all cursor-pointer shadow-xs ${
+                canScrollLeft
+                  ? 'bg-white border-[#E3E0EE] text-[#15131C] hover:bg-[#7B5CFA] hover:text-white hover:border-[#7B5CFA] hover:shadow-[0_4px_14px_rgba(123,92,250,0.25)]'
+                  : 'bg-white/50 border-[#E3E0EE]/60 text-[#6B6976]/40 cursor-not-allowed'
+              }`}
+            >
+              <ChevronLeft className="w-5 h-5" />
+            </button>
+            <button
+              type="button"
+              onClick={() => handleScroll('right')}
+              disabled={!canScrollRight}
+              aria-label="Next testimonials"
+              id="testimonials-next-btn"
+              className={`w-11 h-11 rounded-2xl border flex items-center justify-center transition-all cursor-pointer shadow-xs ${
+                canScrollRight
+                  ? 'bg-white border-[#E3E0EE] text-[#15131C] hover:bg-[#7B5CFA] hover:text-white hover:border-[#7B5CFA] hover:shadow-[0_4px_14px_rgba(123,92,250,0.25)]'
+                  : 'bg-white/50 border-[#E3E0EE]/60 text-[#6B6976]/40 cursor-not-allowed'
+              }`}
+            >
+              <ChevronRight className="w-5 h-5" />
+            </button>
+          </div>
+        </div>
 
-              {/* Quote Text */}
-              <blockquote className="text-lg sm:text-2xl text-white font-display font-medium leading-relaxed mb-8">
-                "{currentTesti.quote}"
-              </blockquote>
+        {/* Horizontal Drag/Swipe Carousel Container */}
+        <div className="relative -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8">
+          <div
+            ref={scrollContainerRef}
+            onMouseDown={handleMouseDown}
+            onMouseMove={handleMouseMove}
+            onMouseUp={handleMouseUp}
+            onMouseLeave={handleMouseLeave}
+            onScroll={updateScrollButtons}
+            className={`flex gap-6 overflow-x-auto no-scrollbar scroll-smooth pt-3 pb-8 select-none ${
+              isDragging ? 'cursor-grabbing' : 'cursor-grab'
+            }`}
+            style={{
+              WebkitOverflowScrolling: 'touch',
+            }}
+          >
+            {TESTIMONIALS_DATA.map((item, idx) => (
+              <motion.div
+                key={item.id}
+                id={`testimonial-card-${item.id}`}
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-50px' }}
+                transition={{ duration: 0.5, delay: idx * 0.08 }}
+                whileHover={{
+                  y: -6,
+                  boxShadow: '0 20px 40px -10px rgba(123, 92, 250, 0.25)',
+                  transition: { duration: 0.25, ease: 'easeOut' },
+                }}
+                className="group w-[300px] sm:w-[350px] lg:w-[384px] shrink-0 min-h-[310px] p-8 rounded-3xl bg-white/80 backdrop-blur-[20px] border border-[#E3E0EE] flex flex-col justify-between transition-all duration-300 ease-out hover:bg-[#7B5CFA] hover:border-[#7B5CFA]"
+                style={{
+                  backdropFilter: 'blur(20px)',
+                  WebkitBackdropFilter: 'blur(20px)',
+                }}
+              >
+                <div>
+                  {/* Quote Icon */}
+                  <div className="w-10 h-10 rounded-xl bg-[#EFEDF6] text-[#7B5CFA] group-hover:bg-white/20 group-hover:text-white flex items-center justify-center mb-6 transition-all">
+                    <Quote className="w-5 h-5" />
+                  </div>
 
-              {/* Author Info & Navigation Controls */}
-              <div className="pt-8 border-t border-white/10 flex items-center justify-between">
-                <div className="flex items-center gap-4">
-                  <img
-                    src={currentTesti.avatarUrl}
-                    alt={currentTesti.author}
-                    className="w-14 h-14 rounded-full object-cover border-2 border-[#C7FF00]"
-                  />
+                  {/* Quote Text */}
+                  <p className="text-base text-[#15131C] group-hover:text-white leading-relaxed italic mb-8 transition-colors">
+                    "{item.quote}"
+                  </p>
+                </div>
+
+                {/* Author Info */}
+                <div className="pt-6 border-t border-[#E3E0EE] group-hover:border-white/20 flex items-center gap-4 transition-colors">
+                  <div className="w-11 h-11 rounded-full bg-gradient-to-tr from-[#7B5CFA] to-[#9F85FF] group-hover:from-white group-hover:to-white text-white group-hover:text-[#7B5CFA] font-black text-sm flex items-center justify-center shadow-xs transition-all">
+                    {item.avatarText}
+                  </div>
                   <div>
-                    <p className="text-base font-bold text-white font-display">
-                      {currentTesti.author}
-                    </p>
-                    <p className="text-xs text-[#808080]">
-                      {currentTesti.role} at <span className="text-[#B5B5B5] font-semibold">{currentTesti.company}</span>
+                    <h4 className="text-sm font-bold text-[#15131C] group-hover:text-white transition-colors">
+                      {item.name}
+                    </h4>
+                    <p className="text-xs text-[#6B6976] group-hover:text-white/85 transition-colors">
+                      {item.role},{' '}
+                      <span className="text-[#7B5CFA] group-hover:text-white font-medium transition-colors">
+                        {item.company}
+                      </span>
                     </p>
                   </div>
                 </div>
-
-                <div className="flex items-center gap-2">
-                  <button
-                    onClick={handlePrev}
-                    className="p-3 rounded-full bg-white/5 hover:bg-white/10 text-white transition-colors border border-white/10"
-                    aria-label="Previous Testimonial"
-                  >
-                    <ChevronLeft className="w-5 h-5" />
-                  </button>
-                  <button
-                    onClick={handleNext}
-                    className="p-3 rounded-full bg-white/5 hover:bg-white/10 text-white transition-colors border border-white/10"
-                    aria-label="Next Testimonial"
-                  >
-                    <ChevronRight className="w-5 h-5" />
-                  </button>
-                </div>
-              </div>
-
-            </div>
+              </motion.div>
+            ))}
           </div>
-
-          {/* RIGHT: Stat Cards (Span 5) */}
-          <div className="lg:col-span-5 flex flex-col gap-6">
-            
-            {/* Google Rating Stat Card */}
-            <div className="bg-[#141414] border border-white/10 rounded-[28px] p-8 flex items-center justify-between">
-              <div>
-                <div className="flex items-center gap-1.5 mb-2">
-                  {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="w-4 h-4 fill-[#C7FF00] text-[#C7FF00]" />
-                  ))}
-                  <span className="text-xs font-mono font-bold text-[#C7FF00] ml-2">5.0 / 5.0</span>
-                </div>
-                <h4 className="text-2xl font-bold text-white font-display">
-                  Client Rating
-                </h4>
-                <p className="text-xs text-[#808080] mt-1">Verified Client Reviews & System Audits</p>
-              </div>
-              <div className="p-4 rounded-2xl bg-[#C7FF00]/10 text-[#C7FF00] border border-[#C7FF00]/20">
-                <ShieldCheck className="w-8 h-8" />
-              </div>
-            </div>
-
-            {/* Satisfaction Stat Card */}
-            <div className="bg-[#141414] border border-white/10 rounded-[28px] p-8 flex items-center justify-between">
-              <div>
-                <p className="text-4xl sm:text-5xl font-extrabold text-[#C7FF00] font-display">
-                  {PERSONAL_INFO.stats.clientSatisfaction}
-                </p>
-                <h4 className="text-lg font-bold text-white font-display mt-2">
-                  Client Satisfaction
-                </h4>
-                <p className="text-xs text-[#808080] mt-1">Zero-downtime SLA Guarantee</p>
-              </div>
-              <div className="p-4 rounded-2xl bg-white/5 text-white border border-white/10">
-                <Award className="w-8 h-8" />
-              </div>
-            </div>
-
-            {/* Workflows Deployed Card */}
-            <div className="bg-[#141414] border border-white/10 rounded-[28px] p-8 flex items-center justify-between">
-              <div>
-                <p className="text-4xl sm:text-5xl font-extrabold text-white font-display">
-                  {PERSONAL_INFO.stats.workflowsDeployed}
-                </p>
-                <h4 className="text-lg font-bold text-[#B5B5B5] font-display mt-2">
-                  Automated Workflows
-                </h4>
-                <p className="text-xs text-[#808080] mt-1">Live in Enterprise Production</p>
-              </div>
-              <div className="p-4 rounded-2xl bg-white/5 text-white border border-white/10">
-                <Zap className="w-8 h-8 text-[#C7FF00]" />
-              </div>
-            </div>
-
-          </div>
-
         </div>
 
       </div>
     </section>
   );
-};
+}

@@ -1,78 +1,61 @@
-import React, { useState } from 'react';
-import { Navbar } from './components/Navbar';
+import { Header } from './components/Header';
 import { Hero } from './components/Hero';
-import { ServicesMarquee } from './components/ServicesMarquee';
 import { About } from './components/About';
-import { Services } from './components/Services';
-import { CtaBand } from './components/CtaBand';
 import { Projects } from './components/Projects';
+import { CtaBanner } from './components/CtaBanner';
+import { Services } from './components/Services';
 import { Skills } from './components/Skills';
-import { WorkProcess } from './components/WorkProcess';
+import { Process } from './components/Process';
 import { Pricing } from './components/Pricing';
+import { Faq } from './components/Faq';
 import { Testimonials } from './components/Testimonials';
 import { Contact } from './components/Contact';
 import { Footer } from './components/Footer';
-import { ParticlesBackground } from './components/ParticlesBackground';
-import { AiAgentSimulatorModal } from './components/AiAgentSimulatorModal';
 
 export default function App() {
-  const [isDemoModalOpen, setIsDemoModalOpen] = useState(false);
-  const [selectedDemoProjectId, setSelectedDemoProjectId] = useState<string | undefined>(undefined);
-  const [prefilledService, setPrefilledService] = useState<string | undefined>(undefined);
-
-  const handleOpenDemo = (projectId?: string) => {
-    setSelectedDemoProjectId(projectId);
-    setIsDemoModalOpen(true);
-  };
-
-  const handleSelectServiceForContact = (serviceTitle: string) => {
-    setPrefilledService(serviceTitle);
-    const contactElement = document.getElementById('contact');
-    if (contactElement) {
-      contactElement.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
-
-  const handleSelectPlan = (planTitle: string) => {
-    setPrefilledService(`Pricing Package: ${planTitle}`);
-    const contactElement = document.getElementById('contact');
-    if (contactElement) {
-      contactElement.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
-
   return (
-    <div className="relative bg-[#0B0B0B] text-[#B5B5B5] min-h-screen selection:bg-[#C7FF00] selection:text-black font-sans">
-      {/* Background Floating Subtle Ambient Particles */}
-      <ParticlesBackground />
+    <div className="min-h-screen flex flex-col bg-[#F7F6FB] text-[#15131C] selection:bg-[#7B5CFA]/20 selection:text-[#7B5CFA]">
+      {/* 1. Header / Navigation */}
+      <Header />
 
-      {/* Navigation Bar */}
-      <Navbar onOpenDemo={() => handleOpenDemo()} />
+      {/* Main Single-Page Content in Exact Order */}
+      <main className="flex-1 w-full overflow-x-hidden">
+        {/* 4.1 Hero Section */}
+        <Hero />
 
-      {/* Main Content Sections */}
-      <main className="relative z-10">
-        <Hero onOpenDemo={() => handleOpenDemo()} />
-        <ServicesMarquee />
+        {/* 4.2 About Section */}
         <About />
-        <Services onSelectServiceForContact={handleSelectServiceForContact} />
-        <CtaBand onOpenDemo={() => handleOpenDemo()} />
-        <Projects onRunDemo={(id) => handleOpenDemo(id)} />
+
+        {/* 4.3 Selected Projects Section */}
+        <Projects />
+
+        {/* 4.4 Statement / CTA Banner Section */}
+        <CtaBanner />
+
+        {/* 4.5 Services Section */}
+        <Services />
+
+        {/* 4.6 Technical Proficiency Section */}
         <Skills />
-        <WorkProcess />
-        <Pricing onSelectPlan={handleSelectPlan} />
+
+        {/* 4.7 Process Section */}
+        <Process />
+
+        {/* 4.8 Pricing Section */}
+        <Pricing />
+
+        {/* 4.9 FAQ Section */}
+        <Faq />
+
+        {/* 4.10 Testimonials Section */}
         <Testimonials />
-        <Contact prefilledService={prefilledService} />
+
+        {/* 4.11 Contact Section */}
+        <Contact />
       </main>
 
-      {/* Footer */}
+      {/* 4.11 Footer */}
       <Footer />
-
-      {/* Interactive AI Agent Simulator Modal */}
-      <AiAgentSimulatorModal
-        isOpen={isDemoModalOpen}
-        onClose={() => setIsDemoModalOpen(false)}
-        initialProjectId={selectedDemoProjectId}
-      />
     </div>
   );
 }
