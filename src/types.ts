@@ -5,6 +5,16 @@ export interface ProjectExtraLink {
   url: string;
 }
 
+export interface ProjectSubSection {
+  imageSrc: string;
+  imageAlt?: string;
+  browserUrl?: string;
+  introTitle?: string;
+  description: string;
+  linkText: string;
+  linkUrl: string;
+}
+
 export interface ProjectDetail {
   imageSrc?: string;
   imageAlt?: string;
@@ -15,6 +25,7 @@ export interface ProjectDetail {
   extraLinksTitle?: string;
   extraLinks?: ProjectExtraLink[];
   closingText?: string;
+  subSection?: ProjectSubSection;
 }
 
 export interface Project {

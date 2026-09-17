@@ -335,6 +335,69 @@ export function Projects() {
                   </div>
                 )}
 
+                {/* Sub-section (e.g. DocuMorph Chrome Extension) */}
+                {activeModalProject.detail.subSection && (
+                  <div className="pt-6 pb-2 border-t border-[#E3E0EE]/70 mb-6">
+                    {/* Browser-style preview frame matching main image */}
+                    <div className="rounded-2xl border border-[#E3E0EE] bg-[#EFEDF6] overflow-hidden shadow-xs mb-5">
+                      {/* Browser top window bar */}
+                      <div className="px-4 py-2.5 bg-[#EFEDF6] border-b border-[#E3E0EE] flex items-center justify-between gap-4">
+                        <div className="flex items-center gap-1.5">
+                          <span className="w-2.5 h-2.5 rounded-full bg-[#FD5D57]" />
+                          <span className="w-2.5 h-2.5 rounded-full bg-[#FEB82B]" />
+                          <span className="w-2.5 h-2.5 rounded-full bg-[#28C840]" />
+                        </div>
+
+                        <div className="flex-1 max-w-sm mx-auto px-3 py-1 rounded-md bg-white/90 border border-[#E3E0EE] text-[11px] text-[#6B6976] font-mono truncate text-center select-all">
+                          {activeModalProject.detail.subSection.browserUrl || 'chromewebstore.google.com/detail/documorph'}
+                        </div>
+
+                        <div className="flex items-center gap-1 text-[11px] font-semibold text-[#7B5CFA]">
+                          <span className="hidden sm:inline">Chrome Extension</span>
+                        </div>
+                      </div>
+
+                      {/* Screenshot display */}
+                      <div className="relative aspect-[16/10] sm:aspect-[16/9] w-full bg-[#15131C]/5 overflow-hidden">
+                        <img
+                          src={activeModalProject.detail.subSection.imageSrc}
+                          alt={activeModalProject.detail.subSection.imageAlt || activeModalProject.title}
+                          className="w-full h-full object-cover object-top"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Intro line */}
+                    {activeModalProject.detail.subSection.introTitle && (
+                      <p className="text-sm sm:text-base font-semibold text-[#15131C] mb-2 leading-snug">
+                        {activeModalProject.detail.subSection.introTitle}
+                      </p>
+                    )}
+
+                    {/* Description */}
+                    <p className="text-sm sm:text-base text-[#6B6976] leading-relaxed mb-4">
+                      {activeModalProject.detail.subSection.description}
+                    </p>
+
+                    {/* Live Link Button */}
+                    {activeModalProject.detail.subSection.linkUrl && (
+                      <div>
+                        <a
+                          href={activeModalProject.detail.subSection.linkUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-2 px-5 py-3 rounded-2xl bg-[#7B5CFA]/10 hover:bg-[#7B5CFA] text-[#7B5CFA] hover:text-white border border-[#7B5CFA]/20 hover:border-[#7B5CFA] font-bold text-xs sm:text-sm transition-all duration-200 shadow-xs group"
+                        >
+                          <ExternalLink className="w-4 h-4 shrink-0 transition-transform group-hover:scale-110" />
+                          <span className="break-all text-left">
+                            {activeModalProject.detail.subSection.linkText || activeModalProject.detail.subSection.linkUrl}
+                          </span>
+                        </a>
+                      </div>
+                    )}
+                  </div>
+                )}
+
                 {/* Extra plain text links (for PureNest Cleaning / Creative Website) */}
                 {activeModalProject.detail.extraLinks && activeModalProject.detail.extraLinks.length > 0 && (
                   <div className="p-4 sm:p-5 rounded-2xl bg-[#EFEDF6]/70 border border-[#E3E0EE] mb-6">

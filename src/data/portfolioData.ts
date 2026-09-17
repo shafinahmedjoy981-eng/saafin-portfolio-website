@@ -25,6 +25,18 @@ export const PROJECTS_DATA: Project[] = [
         'An all-in-one PDF & image toolkit built for speed and reliability — merge, split, compress, and convert files in seconds. Features a fast vector processing engine, clean SaaS-style interface, and secure file handling for modern web workflows.',
       liveLinkText: 'Live Web App: https://docu-morph-pdf-image-platform.vercel.app/',
       liveLinkUrl: 'https://docu-morph-pdf-image-platform.vercel.app/',
+      subSection: {
+        imageSrc: '/documorph_extension.png',
+        imageAlt: 'DocuMorph Chrome Extension - Convert & Extract from any PDF',
+        browserUrl: 'chromewebstore.google.com/detail/documorph',
+        introTitle: "I've also built a PDF to Image and PDF to Text Chrome extension for DocuMorph — feel free to explore that as well.",
+        description:
+          'Convert PDF pages into high-resolution JPG, PNG, or WEBP images with zero loss in visual clarity. Extract text seamlessly from any PDF — including complex invoices, data-dense spreadsheets, or scanned multi-page documents — powered by automatic OCR support. Engineered with privacy-first architecture, the extension works 100% offline with no server uploads, keeping all files and data strictly on your machine.',
+        linkText:
+          'Explore the Chrome Extension: https://chromewebstore.google.com/detail/kipclgdkieegmnkpbcjbfodaljmpioep',
+        linkUrl:
+          'https://chromewebstore.google.com/detail/kipclgdkieegmnkpbcjbfodaljmpioep?utm_source=item-share-cb',
+      },
     },
   },
   {
